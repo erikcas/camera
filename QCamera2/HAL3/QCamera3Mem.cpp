@@ -609,7 +609,12 @@ int QCamera3HeapMemory::getMatchBufIndex(void * /*object*/)
  * RETURN     : none
  *==========================================================================*/
 QCamera3GrallocMemory::QCamera3GrallocMemory()
+#ifndef CAM_MSM8974
         : QCamera3Memory()
+#else
+        : QCamera3Memory(),
+          mColorSpace(ITU_R_601_FR)
+#endif
 {
     for (int i = 0; i < MM_CAMERA_MAX_NUM_FRAMES; i ++) {
         mBufferHandle[i] = NULL;
@@ -644,8 +649,12 @@ QCamera3GrallocMemory::~QCamera3GrallocMemory()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
+#ifndef CAM_MSM8974
 int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
         cam_stream_type_t type)
+#else
+int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer)
+#endif
 {
     status_t ret = NO_ERROR;
     struct ion_fd_data ion_info_fd;
