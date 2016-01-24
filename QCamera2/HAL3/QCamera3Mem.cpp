@@ -644,8 +644,12 @@ QCamera3GrallocMemory::~QCamera3GrallocMemory()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
+#ifndef CAM_MSM8974
 int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer,
         cam_stream_type_t type)
+#else
+int QCamera3GrallocMemory::registerBuffer(buffer_handle_t *buffer)
+#endif
 {
     status_t ret = NO_ERROR;
     struct ion_fd_data ion_info_fd;
