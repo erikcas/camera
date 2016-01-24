@@ -1263,7 +1263,11 @@ int QCameraVideoMemory::allocate(uint8_t count, size_t size, uint32_t isSecure)
             nh->data[0] = mMemInfo[i].fd;
             nh->data[1] = 0;
             nh->data[2] = (int)mMemInfo[i].size;
+#ifdef CAM_MSM8974
+            nh->data[3] = private_handle_t::PRIV_FLAGS_ITU_R_601_FR;
+#else
             nh->data[3] = private_handle_t::PRIV_FLAGS_ITU_R_709;
+#endif
             nh->data[4] = 0;
             nh->data[5] = 0;
         }
@@ -1489,11 +1493,7 @@ int QCameraVideoMemory::getMatchBufIndex(const void *opaque,
  * RETURN     : none
  *==========================================================================*/
 QCameraGrallocMemory::QCameraGrallocMemory(camera_request_memory memory)
-#ifdef CAM_MSM8974
         : QCameraMemory(true)
-#else
-        : QCameraMemory(true), mColorSpace(ITU_R_601_FR)
-#endif
 {
     mMinUndequeuedBuffers = 0;
     mWindow = NULL;
@@ -1751,9 +1751,6 @@ int QCameraGrallocMemory::allocate(uint8_t count, size_t /*size*/,
                 goto end;
             }
         }
-#ifndef CAM_MSM8974
-        setMetaData(mPrivateHandle[cnt], UPDATE_COLOR_SPACE, &mColorSpace);
-#endif
         mCameraMemory[cnt] =
             mGetMemory(mPrivateHandle[cnt]->fd,
                     (size_t)mPrivateHandle[cnt]->size,
