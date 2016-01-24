@@ -1263,7 +1263,11 @@ int QCameraVideoMemory::allocate(uint8_t count, size_t size, uint32_t isSecure)
             nh->data[0] = mMemInfo[i].fd;
             nh->data[1] = 0;
             nh->data[2] = (int)mMemInfo[i].size;
+#ifdef CAM_MSM8974
+            nh->data[3] = private_handle_t::PRIV_FLAGS_ITU_R_601_FR;
+#else
             nh->data[3] = private_handle_t::PRIV_FLAGS_ITU_R_709;
+#endif
             nh->data[4] = 0;
             nh->data[5] = 0;
         }
