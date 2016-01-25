@@ -1271,7 +1271,13 @@ int QCamera3HardwareInterface::configureStreams(
             //for zsl stream the size is jpeg stream size
             mStreamConfigInfo.stream_sizes[i].width = (int32_t)jpegStream->width;
             mStreamConfigInfo.stream_sizes[i].height = (int32_t)jpegStream->height;
-            mStreamConfigInfo.type[i] = CAM_STREAM_TYPE_SNAPSHOT;
+            if (bUseCommonFeatureMask) {
+                mStreamConfigInfo.postprocess_mask[i] =
+                        commonFeatureMask;
+            } else {
+                mStreamConfigInfo.postprocess_mask[i] =
+                        CAM_QCOM_FEATURE_NONE;
+            }
             mStreamConfigInfo.postprocess_mask[i] = CAM_QCOM_FEATURE_NONE;
         } else {
             //for non zsl streams find out the format
